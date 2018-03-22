@@ -1,0 +1,7 @@
+deepspeech/models/*
+*.pyc
+bin/
+lib/
+include/
+.Python
+.DS_Store
