@@ -1,4 +1,5 @@
 deepspeech/models/*
+deepspeech/source/*
 *.pyc
 bin/
 lib/

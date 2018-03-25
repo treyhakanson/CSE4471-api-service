@@ -4,6 +4,7 @@ import scipy.io.wavfile as wav
 
 # Gool 'ol copy paste from the config parameters in the source code. Only one we really need to change
 # is the WAV_FILE to a buffer/in-memory file for a server-side use case
+EXTENDED_MODEL = True
 WAV_FILE = "audio/test.wav"
 MODEL = "models/output_graph.pb"
 N_FEATURES = 26 # Number of MFCC features to use
@@ -17,7 +18,19 @@ WORD_COUNT_WEIGHT = 1.00 # The beta hyperparameter of the CTC decoder. Word inse
 VALID_WORD_COUNT_WEIGHT = 1.00 # Used to lessen the word insertion penalty when the word is part of vocab
 
 ds = model.Model(MODEL, N_FEATURES, N_CONTEXT, ALPHABET, BEAM_WIDTH)
-ds.enableDecoderWithLM(ALPHABET, LM, TRIE, LM_WEIGHT, WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
-fs, audio = wav.read(WAV_FILE)
-processed_data = ds.stt(audio, fs)
-print processed_data
+if EXTENDED_MODEL:
+    ds.enableDecoderWithLM(ALPHABET, LM, TRIE, LM_WEIGHT, WORD_COUNT_WEIGHT, VALID_WORD_COUNT_WEIGHT)
+
+def test_model():
+    fs, audio = wav.read(WAV_FILE)
+    processed_data = ds.stt(audio, fs)
+    print processed_data
+
+def mimic_buff_file():
+    with open(WAV_FILE, mode='rb') as file:
+        fs, audio = wav.read(WAV_FILE)
+        processed_data = ds.stt(audio, fs)
+        print processed_data
+
+if __name__ == "__main__":
+    mimic_buff_file()
