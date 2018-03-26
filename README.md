@@ -17,3 +17,4 @@ The API service managing key distribution and passphrase invalidation for the au
 * route for login
 	* verify passphrase to most recent user hashed verification code.
 	* return token signed by the server (verification hash)
+* simple route to serve webpage 
