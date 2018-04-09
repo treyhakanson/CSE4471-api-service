@@ -1,0 +1,25 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Verbal Authentication Demo</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="/static/css/icons/css/fontawesome.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Confirm Login</h1>
+    <p>Please speak the folowing passphrase to continue:</p>
+    <div id="passphrase">
+      <i id="speak-icon" class="icon-volume-down" style="display:none;"></i>
+      <span id="passphrase-text">Loading...</span>
+    </div>
+  </div>
+  <script src="/static/js/axios.min.js"></script>
+  <script src="/static/js/constants.js"></script>
+  <script src="/static/js/auth-bounce.js"></script>
+  <script src="/static/js/confirmation.js"></script>
+</body>
+</html>

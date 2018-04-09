@@ -1,6 +1,10 @@
-from flask import Flask, g, request, jsonify
+from flask import Flask, g, request, jsonify, render_template
+import os.path
 
 import db
+
+# auto reload on change
+DEBUG = True
 
 app = Flask(__name__)
 
@@ -10,10 +14,15 @@ def close_connection(exception):
     if getattr(g, "_database", None):
         g._database.close()
 
+# Serve static files
+@app.route('/static/<path:path>')
+def static_proxy(path):
+  return app.send_static_file("static/%s" % path)
+
 # Routes
-@app.route("/")
-def index():
-    return "index"
+@app.route("/demo/<string:page_name>")
+def index(page_name):
+    return render_template("%s.html" % (page_name))
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -46,7 +55,7 @@ def dual_token():
     }
     return jsonify(response)
 
-@app.route("/phrase")
+@app.route("/phrase", methods=["POST", "GET"])
 def get_phrase():
     '''
     Returns the phrase for the current session as indicated in
@@ -70,4 +79,4 @@ def get_phrases():
     response = {"requests": requests}
     return jsonify(response)
 
-app.run()
+app.run(debug=DEBUG)

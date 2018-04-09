@@ -1,0 +1,50 @@
+/*$primary-default: rgb(93, 154, 235);
+$primary-dark: rgb(50, 106, 181);
+$gray-light: rgb(209, 206, 206);
+$gray-medium: rgb(185, 185, 185);
+}*/
+
+body {
+   background-color: rgb(93, 154, 235);
+   font-family: Helvetica, Arial, sans-serif;
+   text-align: center;
+   font-size: 0.75em;
+}
+
+.container {
+   background-color: white;
+   display: inline-block;
+   padding: 2em;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+}
+
+.submit-btn {
+   background-color: rgb(50, 106, 181);
+   border: none;
+   border-radius: 4px;
+   color: white;
+   padding: 3px;
+   width: 100%;
+}
+
+#login-form input {
+   margin: 6px 0;
+}
+
+#passphrase {
+   background-color: rgb(209, 206, 206);
+   padding: 5px;
+}
+
+#error-block {
+   padding: 10px 0;
+   background-color: rgb(235, 58, 34);
+   color: #fff;
+}
+
+#passphrase-text {
+   font-size: 14px;
+}

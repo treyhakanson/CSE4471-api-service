@@ -1,5 +1,6 @@
 import hashlib
 import json
+import re
 
 try:
     with open('settings.py', 'rb') as settings: exec(settings.read())

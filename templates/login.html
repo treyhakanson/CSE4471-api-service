@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html lang="en">
+   <head>
+     <meta charset="utf-8">
+     <title>Verbal Authentication Demo</title>
+     <link rel="stylesheet" href="/static/css/styles.css">
+     <link rel="stylesheet" href="/static/css/icons/css/fontawesome.css">
+   </head>
+
+   <body>
+     <div class="container">
+       <form id="login-form">
+         <h1>Welcome</h1>
+         <i class="icon-user"></i>
+         <input type="text" placeholder="Username" name="user" />
+         <br />
+         <i class="icon-lock"></i>
+         <input type="password" placeholder="Password" name="pass" />
+         <br />
+         <input class="submit-btn" type="submit" value="Login"/>
+         <div id="error-block" style="display:none;"></div>
+       </form>
+     </div>
+     <script src="/static/js/axios.min.js"></script>
+     <script src="/static/js/constants.js"></script>
+     <script src="/static/js/login.js"></script>
+   </body>
+</html>
