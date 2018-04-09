@@ -1,0 +1,16 @@
+CREATE TABLE User (
+	user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	first_name VARCHAR(100) NOT NULL,
+	last_name VARCHAR(100) NOT NULL,
+	email VARCHAR(100) UNIQUE NOT NULL,
+    salt CHARACTER(36) NOT NULL,
+    password CHARACTER(128)
+);
+
+CREATE TABLE Phrases (
+    user_id INTEGER REFERENCES User(user_id),
+    phrase VARCHAR(128),
+	session CHARACTER(36) UNIQUE NOT NULL,
+	verified BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT GETDATE
+);

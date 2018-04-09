@@ -1,22 +1,75 @@
-from flask import Flask, g
+from flask import Flask, g, request, jsonify
+
+import db
+
 app = Flask(__name__)
 
 # App constants
 DB_PATH = "db.sqlite"
 
-# Database connection
-def get_db():
-    if not getattr(g, "_database", None):
-        setattr(g, "_database", sqlite3.connect(DB_PATH))
-    return g._database
-
+# Error trapping on database connections
 @app.teardown_appcontext
 def close_connection(exception):
     if getattr(g, "_database", None):
         g._database.close()
 
+# Routes
 @app.route("/")
 def index():
     return "index"
+
+@app.route("/login")
+def login():
+    '''
+    Returns either
+    {outcome: "failure"}
+    ...or...
+    {outcome: "successful", token:"token-string"}
+    based on if the email/password were correct
+    '''
+    data_dict = request.get_json()
+    email = data_dict["email"]
+    password = data_dict["password"]
+    response = {"outcome": "failure"}
+    if email and password:
+        user = db.get_user(email)
+        if user and db.verify_password(user, password):
+            response["token"] = db.get_token(user, dual=False)
+            response["outcome"] = "successful"
+    return jsonify(response)
+
+@app.route("/dual-factor-token")
+def dual_token():
+    data_dict = request.get_json()
+    token = data_dict.get("token", "")
+    success, updated_token = db.check_dual_factor(token)
+    response = {
+        "token": updated_token,
+        "outcome": "success" if success else "failure"
+    }
+    return jsonify(response)
+
+@app.route("/phrase")
+def get_phrase():
+    '''
+    Returns the phrase for the current session as indicated in
+    the token. This token has to be authentic (signed correctly)
+    to return any phrase.
+    If there is already a phrase, it is simply fetched. If not, one
+    is created for the current session and returned in fomrat...
+    {phrase: "this will be a phrase"}
+    '''
+    data_dict = request.get_json()
+    token = data_dict.get("token", "")
+    phrase = db.get_session_passphrase(token)
+    return jsonify({"phrase": phrase})
+
+@app.route("/dual-requests")
+def get_phrases():
+    data_dict = request.get_json()
+    token = data_dict.get("token", "")
+    requests = db.get_dual_requests(token)
+    response = {"requests": requests}
+    return jsonify(response)
 
 app.run()

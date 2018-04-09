@@ -15,7 +15,7 @@ LM = "models/lm.binary"
 LM_WEIGHT = 1.75 # The alpha hyperparameter of the CTC decoder. Language Model weight
 TRIE = "models/trie"
 WORD_COUNT_WEIGHT = 1.00 # The beta hyperparameter of the CTC decoder. Word insertion weight (penalty)
-VALID_WORD_COUNT_WEIGHT = 1.00 # Used to lessen the word insertion penalty when the word is part of vocab
+VALID_WORD_COUNT_WEIGHT = 2.00 # Used to lessen the word insertion penalty when the word is part of vocab
 
 ds = model.Model(MODEL, N_FEATURES, N_CONTEXT, ALPHABET, BEAM_WIDTH)
 if EXTENDED_MODEL:
