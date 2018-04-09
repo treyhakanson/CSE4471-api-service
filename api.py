@@ -15,7 +15,7 @@ def close_connection(exception):
 def index():
     return "index"
 
-@app.route("/login")
+@app.route("/login", methods=["POST", "GET"])
 def login():
     '''
     Returns either
@@ -25,8 +25,8 @@ def login():
     based on if the email/password were correct
     '''
     data_dict = request.get_json()
-    email = data_dict["email"]
-    password = data_dict["password"]
+    email = data_dict.get("email", "")
+    password = data_dict.get("password", "")
     response = {"outcome": "failure"}
     if email and password:
         user = db.get_user(email)
