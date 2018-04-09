@@ -1,5 +1,6 @@
 import hashlib
 import json
+import re
 
 try:
     with open('settings.py', 'rb') as settings: exec(settings.read())
@@ -16,7 +17,7 @@ def verify_token(token):
 		signature = hash(match.group('data'), SERVER_KEY)
 		data = json.loads(match.group('data'))
 		return (signature == match.group('sign'), data)
-	except ValueError, AttributeError:
+	except:
 		return (False, None)
 
 def sign(data):

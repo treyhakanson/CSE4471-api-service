@@ -46,7 +46,7 @@ def dual_token():
     }
     return jsonify(response)
 
-@app.route("/phrase")
+@app.route("/get-phrase")
 def get_phrase():
     '''
     Returns the phrase for the current session as indicated in
@@ -56,10 +56,9 @@ def get_phrase():
     is created for the current session and returned in fomrat...
     {phrase: "this will be a phrase"}
     '''
-    # TODO send push noty with session key
     data_dict = request.get_json()
     token = data_dict.get("token", "")
-    phrase = db.get_session_passphrase(token)
+    phrase, push_key = db.get_session_passphrase(token)
     return jsonify({"phrase": phrase})
 
 @app.route("/dual-requests")
@@ -69,5 +68,14 @@ def get_phrases():
     requests = db.get_dual_requests(token)
     response = {"requests": requests}
     return jsonify(response)
+
+@app.route("/submit-phrase-audio")
+def submit_phrase_audio():
+    data_dict = request.get_json()
+    token = data_dict.get("token", "")
+    success = db.submit_audio(token)
+    respone = {"outcome": "successful" if success else "failure"}
+    return jsonify(response)
+
 
 app.run()

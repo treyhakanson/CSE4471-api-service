@@ -49,27 +49,57 @@ def get_token(user, dual=False):
 def get_session_passphrase(token):
     success, data = hash.verify_token(token)
     if success:
-        sql = """
-            SELECT * FROM Phrases
-            WHERE user_id=? AND session=?
-            LIMIT 1;
-        """
-        row = query_db(sql, [data["user_id"], data["session"]], one=True)
-        phrase = row["phrase"] if row else create_passphrase(user, session)
-        return phrase
-    return None
+        row = get_passphrase(data["user_id"], data["session"])
+        if row:
+            phrase = row["phrase"]
+            push_key = row["push_key"]
+        else:
+            phrase, push_key = create_passphrase(user, session)
+            # TODO send push noty using the push key
+        return phrase, push_key
+    return None, None
+
+def submit_audio(token, push_key=None, audio=None):
+    success, data = hash.verify_token(token)
+    if success:
+        # TODO check audio
+        phrase = get_passphrase(data["user_id"], data["session"])
+        verified_phrases = phrase["phrase"] == "Test phrase authentication"
+        verified_push_keys = phrase["push_key"] == push_key
+        if verified_phrases and verified_push_keys:
+            updated_verified_passphrase(user_id, session)
+
+def get_passphrase(user_id, session):
+    sql = """
+        SELECT * FROM Phrases
+        WHERE user_id=? AND session=?
+        LIMIT 1;
+    """
+    return query_db(sql, [user_id, session], one=True)
 
 def create_passphrase(user_id, session):
-    sql = "INSERT INTO Phrases (user_id, phrase, session) VALUES(?, ?, ?);"
+    sql = """
+        INSERT INTO Phrases (user_id, phrase, session, push_key)
+        VALUES(?, ?, ?, ?);
+    """
     phrase = "Test phrase authentication" # TODO change this
-    query_db(sql, [user_id, phrase, session])
-    return phrase
+    push_key = uuid.uuid4()
+    query_db(sql, [user_id, phrase, session, push_key])
+    return phrase, push_key
+
+def updated_verified_passphrase(user_id, session):
+    sql = """
+        UPDATE FROM Phrases
+        WHERE user_id=? AND session=?
+        SET verified=TRUE;
+    """
+    query_db(sql, [user_id, session])
 
 def check_dual_factor(token):
     success, data = hash.verify_token(token)
     if success:
         sql = """
-            SELECT * FROM get_phrases
+            SELECT * FROM Phrases
             WHERE user_id=? AND session=?
             LIMIT 1;
         """

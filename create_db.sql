@@ -11,6 +11,7 @@ CREATE TABLE Phrases (
     user_id INTEGER REFERENCES User(user_id),
     phrase VARCHAR(128),
 	session CHARACTER(36) UNIQUE NOT NULL,
+	push_key CHARACTER(36) UNIQUE NOT NULL,
 	verified BOOLEAN DEFAULT FALSE,
     created_at DATETIME DEFAULT GETDATE
 );
