@@ -4,9 +4,6 @@ import db
 
 app = Flask(__name__)
 
-# App constants
-DB_PATH = "db.sqlite"
-
 # Error trapping on database connections
 @app.teardown_appcontext
 def close_connection(exception):
@@ -59,6 +56,7 @@ def get_phrase():
     is created for the current session and returned in fomrat...
     {phrase: "this will be a phrase"}
     '''
+    # TODO send push noty with session key
     data_dict = request.get_json()
     token = data_dict.get("token", "")
     phrase = db.get_session_passphrase(token)

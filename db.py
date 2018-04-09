@@ -1,18 +1,24 @@
 import sqlite3
 import uuid
+import time
 from flask import g
-from datetime import datetime
 
-from hash import hash
+import hash
+
+try:
+    with open('settings.py', 'rb') as settings: exec(settings.read())
+except:
+    print "You must have a settings files to designate server key and db path"
 
 # DB utility functions
 def get_db():
     if not getattr(g, "_database", None):
         setattr(g, "_database", sqlite3.connect(DB_PATH))
+        g._database.row_factory = sqlite3.Row
     return g._database
 
 def query_db(sql, args=[], one=False):
-    cursor = get_db().execute(query, args)
+    cursor = get_db().execute(sql, args)
     result = cursor.fetchall()
     cursor.close()
     if one:
@@ -25,7 +31,7 @@ def get_user(email):
     return query_db(sql, [email], one=True)
 
 def verify_password(user, password):
-    pass_hash = hash(password, user["salt"])
+    pass_hash = hash.hash(password, user["salt"])
     success = pass_hash == user["password"]
     if not success:
         pass # Check for too many login attempts?
@@ -36,7 +42,7 @@ def get_token(user, dual=False):
         "user_id": user["user_id"],
         "session": str(uuid.uuid4()),
         "authtype": "dual" if dual else "standard",
-        "created_at": datetime.now()
+        "created_at": int(time.time())
     }
     return hash.sign(data)
 
