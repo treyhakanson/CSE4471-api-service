@@ -54,7 +54,7 @@ def get_session_passphrase(token):
             phrase = row["phrase"]
             push_key = row["push_key"]
         else:
-            phrase, push_key = create_passphrase(user, session)
+            phrase, push_key = create_passphrase(data["user_id"], data["session"])
             # TODO send push noty using the push key
         return phrase, push_key
     return None, None
@@ -83,7 +83,7 @@ def create_passphrase(user_id, session):
         VALUES(?, ?, ?, ?);
     """
     phrase = "Test phrase authentication" # TODO change this
-    push_key = uuid.uuid4()
+    push_key = str(uuid.uuid4())
     query_db(sql, [user_id, phrase, session, push_key])
     return phrase, push_key
 
