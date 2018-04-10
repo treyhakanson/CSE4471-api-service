@@ -78,10 +78,10 @@ def get_phrases():
     response = {"requests": requests}
     return jsonify(response)
 
-@app.route("/submit-phrase-audio")
+@app.route("/submit-phrase-audio", methods=["POST"])
 def submit_phrase_audio():
-    data_dict = request.get_json()
-    token = data_dict.get("token", "")
+    token = request.form.get("token", "")
+    audioFile = request.form.get("audio", "")
     success = db.submit_audio(token)
     respone = {"outcome": "successful" if success else "failure"}
     return jsonify(response)
