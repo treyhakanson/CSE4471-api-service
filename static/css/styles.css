@@ -8,7 +8,7 @@ body {
    background-color: rgb(93, 154, 235);
    font-family: Helvetica, Arial, sans-serif;
    text-align: center;
-   font-size: 0.75em;
+   font-size: 1em;
 }
 
 .container {
@@ -46,5 +46,5 @@ body {
 }
 
 #passphrase-text {
-   font-size: 14px;
+   font-size: 1.15em;
 }
