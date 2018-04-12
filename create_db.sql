@@ -4,7 +4,8 @@ CREATE TABLE User (
 	last_name VARCHAR(100) NOT NULL,
 	email VARCHAR(100) UNIQUE NOT NULL,
     salt CHARACTER(36) NOT NULL,
-    password CHARACTER(128)
+    password CHARACTER(128),
+	push_token VARCHAR(100)
 );
 
 CREATE TABLE Phrases (

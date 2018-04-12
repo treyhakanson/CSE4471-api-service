@@ -18,6 +18,11 @@ def test_get_phrase():
     token = requests.get(HOST+"/login", json=auth).json()["token"]
     print requests.get(HOST+"/phrase", json={"token": token}).json()
 
+def test_get_phrases():
+    token = requests.get(HOST+"/login", json=auth).json()["token"]
+    print requests.get(HOST+"/dual-requests", json={"token": token}).json()
+
 # test_login()
 # test_dual_token_retrieval()
-test_get_phrase()
+# test_get_phrase()
+test_get_phrases()
