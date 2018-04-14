@@ -7,7 +7,7 @@
    function listenForCompletion() {
       let interval = setInterval(function() {
          axios
-            .post(API_BASE_URL + "/complete") // TODO: update this with real url
+            .post(API_BASE_URL + "/dual-factor-token")
             .then(function(res) {
                if (res.data && res.data.outcome === "successful") {
                   clearInterval(interval);
