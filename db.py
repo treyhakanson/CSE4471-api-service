@@ -71,9 +71,9 @@ def get_session_passphrase(token):
         else:
             phrase, push_key = create_passphrase(data["user_id"], data["session"])
             user = get_user_by_id(data["user_id"])
-            push.send_push(user["push_token"], {"key": push_key})
-        return phrase, push_key
-    return None, None
+        push.send_push(user["push_token"], {"key": push_key})
+        return phrase
+    return None
 
 def submit_audio(token, push_key=None, audio=None):
     success, data = hash.verify_token(token)

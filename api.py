@@ -3,7 +3,7 @@ import os.path
 
 import db
 
-# auto reload on change
+# Set to True to auto reload on change, otherwise False
 DEBUG = True
 
 app = Flask(__name__)
@@ -19,11 +19,12 @@ def close_connection(exception):
 def static_proxy(path):
   return app.send_static_file("static/%s" % path)
 
-# Routes
+# Frontend routes
 @app.route("/demo/<string:page_name>")
 def index(page_name):
     return render_template("%s.html" % (page_name))
 
+# API routes
 @app.route("/login", methods=["POST", "GET"])
 def login():
     '''
@@ -46,6 +47,10 @@ def login():
 
 @app.route("/signup", methods=["POST", "GET"])
 def signup():
+    '''
+    Creates a user with an email, hashed password, push_token,
+    and randomized salt.
+    '''
     data_dict = request.get_json()
     email = data_dict.get("email", "")
     password = data_dict.get("password", "")
@@ -59,6 +64,11 @@ def signup():
 
 @app.route("/dual-factor-token")
 def dual_token():
+    '''
+    Returns an updated session token. If the dual factor was successful
+    on the app side, the token will be updated accordingly, and the outcome
+    will be marked as successful as opposed to failure
+    '''
     data_dict = request.get_json()
     token = data_dict.get("token", "")
     success, updated_token = db.check_dual_factor(token)
@@ -76,15 +86,23 @@ def get_phrase():
     to return any phrase.
     If there is already a phrase, it is simply fetched. If not, one
     is created for the current session and returned in fomrat...
-    {phrase: "this will be a phrase"}
+    {phrase: "this will be a phrase"}.
+    In addition, a push notifiation is sent to the user's phone with
+    the specific key needed to verify the authentication request. This
+    is the only time the push_key is visible, and thus, only the phone
+    recieving the push notificartion can verify the auth request.
     '''
     data_dict = request.get_json()
     token = data_dict.get("token", "")
-    phrase, push_key = db.get_session_passphrase(token)
+    phrase = db.get_session_passphrase(token)
     return jsonify({"phrase": phrase})
 
 @app.route("/dual-requests")
 def get_phrases():
+    '''
+    Returns all the dual-auth phrases for the user requesting.
+    Must have a valid single-auth token to do so.
+    '''
     data_dict = request.get_json()
     token = data_dict.get("token", "")
     requests = db.get_dual_requests(token)
@@ -93,6 +111,11 @@ def get_phrases():
 
 @app.route("/submit-phrase-audio", methods=["GET", "POST"])
 def submit_phrase_audio():
+    '''
+    Attempts to verify the audio sent up with the session stored
+    in the single-auth token. Updates the dual auth database
+    entry if needed and returns an outcome of success or failure.
+    '''
     token = request.form.get("token", "")
     audioFile = request.files.get("audio", None)
     success = db.submit_audio(token)
