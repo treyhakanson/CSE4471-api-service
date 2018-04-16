@@ -4,6 +4,7 @@ import time
 from flask import g
 
 import hash
+import push
 
 try:
     with open('settings.py', 'rb') as settings: exec(settings.read())
@@ -30,12 +31,26 @@ def get_user(email):
     sql = "SELECT * FROM User WHERE email=? LIMIT 1;"
     return query_db(sql, [email], one=True)
 
+def get_user_by_id(user_id):
+    sql = "SELECT * FROM User WHERE user_id=? LIMIT 1;"
+    return query_db(sql, [email], one=True)
+
 def verify_password(user, password):
     pass_hash = hash.hash(password, user["salt"])
     success = pass_hash == user["password"]
     if not success:
         pass # Check for too many login attempts?
     return success
+
+def signup(email, password, push_token):
+    salt = str(uuid.uuid4())
+    password = hash.hash(password, salt)
+    sql = """
+        INSERT INTO User (email, salt, password, push_token)
+            VALUES(?, ?, ?, ?);
+    """
+    query_db(sql, [email, salt, password, push_token])
+    return query_db("SELECT * FROM User WHERE email=?;", [email], one=True)
 
 def get_token(user, dual=False):
     data = {
@@ -55,7 +70,8 @@ def get_session_passphrase(token):
             push_key = row["push_key"]
         else:
             phrase, push_key = create_passphrase(data["user_id"], data["session"])
-            # TODO send push noty using the push key
+            user = get_user_by_id(data["user_id"])
+            push.send_push(user["push_token"], {"key": push_key})
         return phrase, push_key
     return None, None
 

@@ -12,11 +12,11 @@ def hash(val, salt):
 	return hashlib.sha512(salt+val).hexdigest()
 
 def urlencode(token):
-	return base64.b64encode(token).strip("=")
+	return base64.urlsafe_b64encode(token).strip("=")
 
 def urldecode(token):
 	padding = (4 - len(token)) % 4
-	return base64.b64decode(token + (padding*"="))
+	return base64.urlsafe_b64decode(token + (padding*"="))
 
 def verify_token(token):
 	token = urldecode(token)

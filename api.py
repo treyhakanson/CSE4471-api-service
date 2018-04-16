@@ -44,6 +44,19 @@ def login():
             response["outcome"] = "successful"
     return jsonify(response)
 
+@app.route("/signup", methods=["POST", "GET"])
+def signup():
+    data_dict = request.get_json()
+    email = data_dict.get("email", "")
+    password = data_dict.get("password", "")
+    push_token = data_dict.get("push_token", "")
+    response = {"outcome": "failure"}
+    if email and password and push_token:
+        user = db.signup(email, password, push_token)
+        response["token"] = db.get_token(user)
+        response["outcome"] = "successful"
+    return jsonify(response)
+
 @app.route("/dual-factor-token")
 def dual_token():
     data_dict = request.get_json()
