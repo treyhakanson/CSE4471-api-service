@@ -64,7 +64,7 @@ def dual_token():
     success, updated_token = db.check_dual_factor(token)
     response = {
         "token": updated_token,
-        "outcome": "success" if success else "failure"
+        "outcome": "successful" if success else "failure"
     }
     return jsonify(response)
 
@@ -96,7 +96,7 @@ def submit_phrase_audio():
     token = request.form.get("token", "")
     audioFile = request.files.get("audio", None)
     success = db.submit_audio(token)
-    respone = {"outcome": "successful" if success else "failure"}
+    response = {"outcome": "successful" if success else "failure"}
     return jsonify(response)
 
 
