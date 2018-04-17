@@ -2,6 +2,7 @@ import sqlite3
 import uuid
 import time
 from flask import g
+import cStringIO
 
 import hash
 import push
@@ -78,9 +79,11 @@ def get_session_passphrase(token):
 def submit_audio(token, push_key=None, audio=None):
     success, data = hash.verify_token(token)
     if success:
-        # TODO check audio
+        audiofile = cStringIO.StringIO()
+        audiofile.write(data["audio"])
+        audio_phrase = speech_recog.read_audio(audiofile)
         phrase = get_passphrase(data["user_id"], data["session"])
-        verified_phrases = phrase["phrase"] == "Test phrase authentication"
+        verified_phrases = phrase["phrase"] == audio_phrase
         verified_push_keys = phrase["push_key"] == push_key
         if verified_phrases and verified_push_keys:
             updated_verified_passphrase(user_id, session)

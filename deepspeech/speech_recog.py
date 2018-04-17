@@ -32,5 +32,10 @@ def mimic_buff_file():
         processed_data = ds.stt(audio, fs)
         print processed_data
 
+def read_audio(audiofile):
+    fs, audio = wav.read(WAV_FILE)
+    processed_data = ds.stt(audio, fs)
+    return processed_data
+
 if __name__ == "__main__":
     mimic_buff_file()
