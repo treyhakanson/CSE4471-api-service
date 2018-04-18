@@ -80,7 +80,7 @@ def submit_audio(token, push_key=None, audio=None):
     success, data = hash.verify_token(token)
     if success:
         audiofile = cStringIO.StringIO()
-        audiofile.write(data["audio"])
+        audiofile.write(audio)
         audio_phrase = speech_recog.read_audio(audiofile)
         phrase = get_passphrase(data["user_id"], data["session"])
         verified_phrases = phrase["phrase"] == audio_phrase

@@ -118,7 +118,7 @@ def submit_phrase_audio():
     '''
     token = request.form.get("token", "")
     audioFile = request.files.get("audio", None)
-    success = db.submit_audio(token)
+    success = db.submit_audio(token, audio=audioFile)
     response = {"outcome": "successful" if success else "failure"}
     return jsonify(response)
 
