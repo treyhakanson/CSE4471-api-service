@@ -24,7 +24,7 @@
             .catch(function(err) {
                console.error(err);
             });
-      }, 2000); // check for updates every 2 seconds
+      }, 1000); // check for updates every 1 second
    }
 
    function setPhrase() {
