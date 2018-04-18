@@ -1,6 +1,7 @@
 import hashlib
 import json
 import re
+import base64
 
 try:
     with open('settings.py', 'rb') as settings: exec(settings.read())
@@ -10,7 +11,15 @@ except:
 def hash(val, salt):
 	return hashlib.sha512(salt+val).hexdigest()
 
+def urlencode(token):
+	return base64.urlsafe_b64encode(token).strip("=")
+
+def urldecode(token):
+	padding = (4 - len(token)) % 4
+	return base64.urlsafe_b64decode(token + (padding*"="))
+
 def verify_token(token):
+	token = urldecode(token)
 	pattern = "\/\/(?P<data>{[^;]*});sign=(?P<sign>[^\/]+)\/\/"
 	match = re.match(pattern, token)
 	try:
@@ -23,4 +32,5 @@ def verify_token(token):
 def sign(data):
 	json_data = json.dumps(data, sort_keys=True)
 	signature = hash(json_data, SERVER_KEY)
-	return "//%s;sign=%s//" % (json_data, signature)
+	token = "//%s;sign=%s//" % (json_data, signature)
+	return urlencode(token)
