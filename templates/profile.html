@@ -4,14 +4,16 @@
 <head>
   <meta charset="utf-8">
   <title>Verbal Authentication Demo</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 
 <body>
   <div class="container">
-    <h1>Hello, [user]!</h1> <!-- TODO: Replace with actual username -->
-    <a href="index.html" onclick="logout()">Log out</a>
+    <h1>Sucessfully authenticated!</h1>
+    <a id="logout">Log out</a>
   </div>
+  <script src="/static/js/constants.js"></script>
+  <script src="/static/js/auth-bounce.js"></script>
   <script src="/static/js/profile.js"></script>
 </body>
 </html>
