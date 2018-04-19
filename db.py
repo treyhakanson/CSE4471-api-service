@@ -6,6 +6,7 @@ import cStringIO
 
 import hash
 import push
+import passphrase_generator
 
 try:
     with open('settings.py', 'rb') as settings: exec(settings.read())
@@ -101,7 +102,7 @@ def create_passphrase(user_id, session):
         INSERT INTO Phrases (user_id, phrase, session, push_key)
         VALUES(?, ?, ?, ?);
     """
-    phrase = "Test phrase authentication" # TODO change this
+    phrase = passphrase_generator.get_passphrase(5)
     push_key = str(uuid.uuid4())
     query_db(sql, [user_id, phrase, session, push_key])
     return phrase, push_key

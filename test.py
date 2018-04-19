@@ -34,9 +34,8 @@ def test_get_phrases():
     token = requests.get(HOST+"/login", json=auth).json()["token"]
     print requests.get(HOST+"/dual-requests", json={"token": token}).json()
 
-
 test_signup()
-# test_login()
-# test_dual_token_retrieval()
-# test_get_phrase()
-# test_get_phrases()
+test_login()
+test_dual_token_retrieval()
+test_get_phrase()
+test_get_phrases()
